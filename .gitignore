@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+env/
+.ipynb_checkpoints/
+
+# data & downloads never go in git (corpus is licensed via the archive)
+resources/
+data/cache/
+*.bin
+
+# regenerate with the experiment scripts
+results/**/*.csv
+results/**/*.csv.gz
+results/**/*.json
+!results/.gitkeep
+# keep final paper figures under version control
+!results/figures/*.png
+.pytest_cache/
