@@ -1,0 +1,94 @@
+% Preliminary contribution statement -- NLP Project 2 (COMS4054A/7062A/7066A)
+% Compile with: pdflatex contribution_statement.tex   (or upload to Overleaf)
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+\setlist{itemsep=0.15em, topsep=0.2em}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{document}
+
+{\centering
+{\Large\textbf{NLP Project 2: Preliminary Contribution Statement}}\\[0.3em]
+COMS4054A / COMS7062A / COMS7066A \quad\textbullet\quad 14 October 2026\\[0.8em]
+}
+
+\textbf{Group members:} Sunay Master, Matthew Purkiss, Harshil Vallabh
+
+\textbf{Project:} \emph{Erased and penalised: 19th-century isiXhosa newspapers in modern NLP pipelines}
+
+\textbf{Research question.} When the isiXhosa newspapers \emph{Isigidimi samaXosa} (1870--1888) and
+\emph{Imvo Zabantsundu} (1884--1894) from the isiXhosa Intellectual Traditions corpus
+(Schoots et al., 2023) are passed through a modern NLP pipeline, how much of the text is filtered
+out, and how much worse is it modelled? How much of that penalty comes from fixable spelling
+differences rather than genuine linguistic or cultural change?
+
+\section*{Division of work}
+
+Each member contributes one third (33.3\%) of the project.
+
+\begin{tabularx}{\textwidth}{@{}l c >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Member} & \textbf{Share} & \textbf{Experiments} & \textbf{Writing and admin} \\
+\midrule
+Sunay   & 33.3\% & A: pretraining filter audit
+        & Introduction; background on data filtering; Experiment A sections; NeurIPS 2024 ethics checklist \\
+Matthew & 33.3\% & B0: spelling normaliser and modern isiXhosa data; B1: tokeniser fertility
+        & Dataset and orthography background; B0/B1 sections; Faculty of Science AI ethics statement \\
+Harshil & 33.3\% & Data exploration and splits; B2: language-model experiment; combining the results
+        & B2 section; limitations; Discussion; README.txt and requirements.txt \\
+\bottomrule
+\end{tabularx}
+
+\subsection*{Sunay Master}
+\begin{itemize}
+  \item Run the filters used to build LLM training data (language ID, Gopher quality rules, C4
+        bad-words list, perplexity filter) on historical isiXhosa, historical English and modern
+        isiXhosa, and measure how much of each survives.
+  \item Find which filters remove the most text, and run them again on spelling-normalised text.
+  \item Look at examples of removed text to see what kind of content is lost.
+\end{itemize}
+
+\subsection*{Matthew Purkiss}
+\begin{itemize}
+  \item Collect modern isiXhosa text (MasakhaNEWS, isiXhosa Wikipedia).
+  \item Build a normaliser that converts historical spelling to modern spelling
+        (e.g.\ \emph{kuti} $\rightarrow$ \emph{kuthi}), and check its accuracy on a hand-checked word list.
+  \item Measure how much more modern tokenisers split up historical text than modern text.
+\end{itemize}
+
+\subsection*{Harshil Vallabh}
+\begin{itemize}
+  \item Corpus statistics, and train/validation/test splits by newspaper edition.
+  \item Train character language models on raw vs normalised text, with and without added modern
+        data, tuned on the validation set and evaluated once on the test set.
+  \item Combine all results to show how much of the gap with modern text is due to spelling.
+\end{itemize}
+
+\subsection*{Shared by all members}
+\begin{itemize}
+  \item The two-page extended abstract (PDF), the full code, and checking every reference.
+  \item The final contribution statement, which will report any changes to this plan and why.
+\end{itemize}
+
+\section*{Agreement}
+
+All group members have read and agree to this division of work.
+
+\vspace{1em}
+\begin{tabularx}{\textwidth}{@{}X X X@{}}
+Sunay Master & Matthew Purkiss & Harshil Vallabh \\[1.6em]
+Signature: \hrulefill & Signature: \hrulefill & Signature: \hrulefill \\[1em]
+Date: \hrulefill & Date: \hrulefill & Date: \hrulefill \\
+\end{tabularx}
+
+\end{document}
