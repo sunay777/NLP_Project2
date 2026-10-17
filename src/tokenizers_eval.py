@@ -14,19 +14,26 @@ from __future__ import annotations
 import numpy as np
 
 # Check these exist / are the versions you want before the final run.
+# AfroXLMR (Davlan/afro-xlmr-base) reuses the XLM-R tokenizer unchanged, so the
+# XLM-R row covers it. Serengeti (UBC-NLP/serengeti) fails to load under
+# transformers>=4.5x; pass it via --tokenizers to retry.
 DEFAULT_TOKENIZERS = {
-    "XLM-R": "xlm-roberta-base",
-    "AfroXLMR": "Davlan/afro-xlmr-base",
+    "XLM-R/AfroXLMR": "xlm-roberta-base",
     "NLLB-200": "facebook/nllb-200-distilled-600M",
-    "Serengeti": "UBC-NLP/serengeti",
     "mT5": "google/mt5-small",
+    "BLOOM": "bigscience/bloom-560m",
+    "GPT-2": "openai-community/gpt2",
+    "Qwen2.5": "Qwen/Qwen2.5-0.5B",
 }
 
 
 def load_tokenizer(name_or_path: str):
     from transformers import AutoTokenizer
 
-    return AutoTokenizer.from_pretrained(name_or_path)
+    try:
+        return AutoTokenizer.from_pretrained(name_or_path)
+    except (TypeError, ValueError):  # some older repos only load as slow (sentencepiece) tokenizers
+        return AutoTokenizer.from_pretrained(name_or_path, use_fast=False)
 
 
 def word_pieces(tok, words: list[str]) -> np.ndarray:

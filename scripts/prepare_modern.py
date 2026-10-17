@@ -3,9 +3,12 @@
 Sources (edit SOURCES to add/remove; verify dataset ids and licences):
   masakhanews_xho : news articles, MasakhaNEWS (Adelani et al., 2023)
   wiki_xh         : isiXhosa Wikipedia (wikimedia/wikipedia, 20231101.xh)
+  vukuzenzele_xho : Vuk'uzenzele government newspaper (dsfsi/vukuzenzele-monolingual)
 Other good options to add manually as .txt files:
   * NCHLT isiXhosa text corpus (SADiLaR repository - government documents)
-  * Vukuzenzele / ZA-gov multilingual corpora (dsfsi on GitHub)
+
+Run with HF_HOME set to a writable folder if ~/.cache is not writable, e.g.
+  HF_HOME=resources/hf_cache python scripts/prepare_modern.py
 
 Keeping sources separate lets you report results per source: government,
 news and Wikipedia isiXhosa are themselves different registers.
@@ -24,6 +27,8 @@ from src import config  # noqa: E402
 SOURCES = {
     "masakhanews_xho": dict(path="masakhane/masakhanews", name="xho", fields=("headline", "text")),
     "wiki_xh": dict(path="wikimedia/wikipedia", name="20231101.xh", fields=("text",)),
+    # Vuk'uzenzele government newspaper (Lastrucci et al., 2023), CC-BY-4.0
+    "vukuzenzele_xho": dict(path="dsfsi/vukuzenzele-monolingual", name="xho", fields=("title", "text")),
 }
 
 

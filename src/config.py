@@ -25,6 +25,7 @@ LID_NLLB = RES_DIR / "lid" / "nllb_lid218.bin"      # facebook/fasttext-language
 LID_GLOT = RES_DIR / "lid" / "glotlid.bin"          # cis-lmu/glotlid
 BADWORDS_DIR = RES_DIR / "badwords"                 # LDNOOBW lists, one file per language code
 MODERN_DIR = RES_DIR / "modern"                     # modern isiXhosa .txt files (one doc per line)
+REF_EN = RES_DIR / "reference" / "wiki_en.txt"      # English Wikipedia sample: perplexity reference for hist_en
 
 # Outputs.
 CACHE_DIR = ROOT / "data" / "cache"

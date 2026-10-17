@@ -100,7 +100,8 @@ def build_map(hist_counts: Counter, modern_counts: Counter, min_count: int = 3,
 # ---- word division -------------------------------------------------------
 _PREFIXES = ("u|i|e|o|a|ku|kwa|ka|nga|ngu|ngo|nge|nje|se|sa|so|ne|na|no|"
              "le|la|lo|ze|zi|ye|yi|ba|be|bo|wa|we|wo|ya|yo")
-_SPLIT_PREFIX = re.compile(rf"\b({_PREFIXES})(?:-|\s+)(?=[A-Z])")
+# separator: hyphen, spaces, or one line break - never a blank line (paragraph boundary)
+_SPLIT_PREFIX = re.compile(rf"\b({_PREFIXES})(?:-|[ \t]+|[ \t]*\n[ \t]*)(?=[A-Z])")
 
 
 def join_prefixes(text: str) -> str:
