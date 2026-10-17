@@ -55,3 +55,12 @@ def test_kn_normalised():
     for h in ("\x02\x02", "ab", "zz"):
         total = sum(lm.prob(h, ch) for ch in lm.vocab)
         assert abs(total - 1) < 1e-9, (h, total)
+
+
+def test_join_prefixes_never_crosses_paragraphs():
+    assert orthography.join_prefixes("ku Magosa u-Maseya ku\nMagosa") == "kuMagosa uMaseya kuMagosa"
+    assert orthography.join_prefixes("wati u\n\nMaseya") == "wati u\n\nMaseya"
+
+
+def test_windows():
+    assert corpus.windows("a b c d e", 2) == ["a b", "c d", "e"]

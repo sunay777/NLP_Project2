@@ -12,13 +12,13 @@ def cluster_bootstrap(df: pd.DataFrame, stat, cluster: str = "edition", n_boot: 
                       seed: int = 0, alpha: float = 0.05) -> tuple[float, float, float]:
     """Point estimate and percentile CI of stat(df), resampling whole clusters."""
     rng = np.random.default_rng(seed)
-    groups = {k: g for k, g in df.groupby(cluster)}
-    keys = np.array(list(groups))
+    df = df.reset_index(drop=True)
+    rows = list(df.groupby(cluster, sort=False).indices.values())  # positional row ids per cluster
     est = stat(df)
     boots = []
     for _ in range(n_boot):
-        sample = rng.choice(keys, size=len(keys), replace=True)
-        boots.append(stat(pd.concat([groups[k] for k in sample], ignore_index=True)))
+        sample = rng.integers(0, len(rows), size=len(rows))
+        boots.append(stat(df.iloc[np.concatenate([rows[k] for k in sample])]))
     lo, hi = np.percentile(boots, [100 * alpha / 2, 100 * (1 - alpha / 2)])
     return float(est), float(lo), float(hi)
 

@@ -26,8 +26,10 @@ class FastTextLID:
 
     def predict(self, text: str, k: int = 3) -> list[tuple[str, float]]:
         text = " ".join(text.split())  # fastText needs a single line
-        labels, probs = self.model.predict(text, k=k)
-        return [(l.replace("__label__", ""), float(p)) for l, p in zip(labels, probs)]
+        # Call the C++ binding directly: model.predict() breaks under NumPy 2
+        # (np.array(copy=False)). Returns [(prob, label), ...].
+        preds = self.model.f.predict(text, k, 0.0, "strict")
+        return [(l.replace("__label__", ""), float(p)) for p, l in preds]
 
 
 def keep(preds: list[tuple[str, float]], target: str, threshold: float) -> bool:

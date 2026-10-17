@@ -21,7 +21,7 @@ Imvo Zabantsundu 1884-1894; Schoots et al., 2023) to measure:
 --------------------------------------------------------------------------
 2. SETUP
 --------------------------------------------------------------------------
-Python 3.10+.
+Python 3.10-3.12 (fasttext-wheel has no 3.14 build).
 
     python -m venv .venv && source .venv/bin/activate
     pip install -r requirements.txt
@@ -36,7 +36,9 @@ or set  export XHOSA_DATA=/path/to/TxtLangFiles1870-1894_TB
 External resources (LID models, bad-word list, modern isiXhosa):
 
     bash scripts/download_resources.sh
-    python scripts/prepare_modern.py
+    export HF_HOME=resources/hf_cache     # if ~/.cache is not writable
+    python scripts/prepare_modern.py      # MasakhaNEWS, Wikipedia, Vuk'uzenzele (isiXhosa)
+    python scripts/prepare_reference_en.py  # English Wikipedia sample (perplexity reference for hist_en)
 
 --------------------------------------------------------------------------
 3. RUN ORDER  (all commands from the repo root)
@@ -45,11 +47,18 @@ External resources (LID models, bad-word list, modern isiXhosa):
     python experiments/e0_eda.py                      # corpus statistics
     python experiments/e1_splits.py                   # edition-grouped splits
     python experiments/b0_normalise.py                # spelling map + normalised corpus
-    python experiments/a1_pipeline_survival.py        # A, raw text
+    python experiments/b0_gold.py --make              # gold-set candidates to hand-check
+    python experiments/b0_gold.py                     # normaliser precision on checked rows
+    python experiments/a1_pipeline_survival.py        # A, raw text (150-word windows)
     python experiments/a1_pipeline_survival.py --normalised
+    python experiments/a1_pipeline_survival.py --xh-stopwords               # Gopher ablation
+    python experiments/a1_pipeline_survival.py --normalised --xh-stopwords
+    python experiments/a1_pipeline_survival.py --unit paragraph             # robustness
+    python experiments/a1_pipeline_survival.py --unit paragraph --normalised
     python experiments/b1_tokenizer_fertility.py      # B1
-    python experiments/b2_lm_2x2.py                   # B2 (slowest; ~CPU minutes-hours)
-    python experiments/b3_mlm_pll.py                  # B3 (optional)
+    python experiments/b2_lm_2x2.py --jobs 5          # B2 (~1 h on 5 CPU cores)
+    python experiments/c1_summary.py                  # gap decomposition + paper figures
+    python experiments/b3_mlm_pll.py                  # B3 (optional, not run)
 
 Outputs go to results/<experiment>/ and figures to results/figures/.
 Every script prints what it saved.
@@ -71,7 +80,9 @@ src/stats.py           edition-cluster bootstrap, permutation test
 experiments/           one script per experiment (see run order)
 scripts/               resource download / preparation
 tests/                 unit tests
-paper/                 extended abstract (LaTeX template from Moodle)
+paper/                 extended_abstract/ (main.tex, references.bib), ethics_drafts.md,
+                       contribution_statement/
+STATUS.md              what is done / what still needs a human
 data/                  splits.json, gold_normalisation.tsv (cache/ is ignored)
 
 --------------------------------------------------------------------------

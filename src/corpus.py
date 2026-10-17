@@ -79,17 +79,33 @@ def select(df: pd.DataFrame, papers=None, years=None, overlap_only: bool = False
     return df
 
 
-def to_units(df: pd.DataFrame, lang: str = "xh", unit: str = "page", min_words: int = 20) -> pd.DataFrame:
-    """Explode pages into analysis units ('page' or 'paragraph') carrying metadata.
-    Paragraph units are what a web-scale pipeline would typically see as documents
-    after boilerplate removal; page units are closer to how the archive is stored."""
+def windows(text: str, size: int) -> list[str]:
+    """Consecutive non-overlapping chunks of `size` whitespace words (single line).
+    The trailing remainder is kept as its own chunk; callers filter by min_words."""
+    toks = text.split()
+    return [" ".join(toks[i:i + size]) for i in range(0, len(toks), size)]
+
+
+def to_units(df: pd.DataFrame, lang: str = "xh", unit: str = "page", min_words: int = 20,
+             window: int = 150) -> pd.DataFrame:
+    """Explode pages into analysis units carrying metadata.
+    'paragraph': what a web pipeline would see as documents after boilerplate removal;
+    'page': how the archive is stored;
+    'window': fixed `window`-word chunks of each page, so that historical and modern
+    corpora are compared on equal-length units (length-dependent rules such as
+    Gopher's 50-word minimum then cannot drive the difference)."""
     from .text import paragraphs
 
     meta_cols = ["page_id", "paper", "date", "year", "page", "edition"]
     out = []
     for r in df.itertuples(index=False):
         text = getattr(r, lang)
-        chunks = [text] if unit == "page" else paragraphs(text)
+        if unit == "page":
+            chunks = [text]
+        elif unit == "window":
+            chunks = windows(" ".join(paragraphs(text)), window)
+        else:
+            chunks = paragraphs(text)
         for i, c in enumerate(chunks):
             if len(c.split()) >= min_words:
                 d = {k: getattr(r, k) for k in meta_cols}
