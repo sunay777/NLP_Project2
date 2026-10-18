@@ -71,7 +71,7 @@ def main():
     en = en.sample(min(args.units, len(en)), random_state=config.SEED).assign(raw_text=lambda d: d.text)
     # hist_en: same pages, English sections -- separates the "isiXhosa tax" from any "1880s tax"
     conds = {"hist_raw": hraw, "hist_norm": hnorm, "hist_en": en}
-    mod = [d for _, d in modern.iter_docs()]
+    mod = [d for _, d in modern.iter_role("control")]  # held out from the normaliser's lexicon
     if mod:
         m_idx = np.random.default_rng(config.SEED).choice(len(mod), size=min(args.units, len(mod)), replace=False)
         texts = [mod[i] for i in m_idx]
