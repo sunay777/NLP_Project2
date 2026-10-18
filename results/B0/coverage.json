@@ -1,17 +1,24 @@
 {
-  "modern_lexicon_types": 160409,
-  "map_size": 3942,
-  "coverage_raw": 0.63240127076142,
-  "coverage_norm": 0.6841843659636477,
-  "tokens_changed_frac": 0.09005304159099144,
+  "modern_lexicon_types": 59311,
+  "map_size": 1577,
+  "coverage_raw": 0.5187193051741861,
+  "coverage_norm": 0.5583960210423162,
+  "heldout_types": 59272,
+  "coverage_heldout_raw": 0.5216867062837918,
+  "coverage_heldout_norm": 0.562177169486663,
+  "tokens_changed_frac": 0.07054232590036538,
   "by_paper": {
     "IMVO": {
-      "raw": 0.6321174639531858,
-      "norm": 0.6760173438035002
+      "raw": 0.518456596406057,
+      "norm": 0.5498620225171116,
+      "heldout_raw": 0.5216078017894519,
+      "heldout_norm": 0.5538261913129557
     },
     "ISIG": {
-      "raw": 0.6331232367714856,
-      "norm": 0.7046356369676608
+      "raw": 0.519387600633042,
+      "norm": 0.5797662479333932,
+      "heldout_raw": 0.521887428610748,
+      "heldout_norm": 0.5830890899431148
     }
   }
 }

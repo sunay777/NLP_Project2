@@ -100,14 +100,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--budget", type=int, default=3_000_000, help="training characters per condition")
     ap.add_argument("--fracs", type=float, nargs="*", default=[0.0, 0.25, 0.5, 0.75, 1.0])
-    # Wider than the first run, whose best setting sat on the grid edge (order 6, d 0.9).
-    ap.add_argument("--orders", type=int, nargs="*", default=[3, 4, 5, 6, 7, 8])
+    # Validation keeps improving slowly up to order 12 (2.77 -> 2.73 bits/letter from 8 to 12);
+    # test conclusions are the same at orders 8 and 12.
+    ap.add_argument("--orders", type=int, nargs="*", default=list(range(3, 13)))
     ap.add_argument("--discounts", type=float, nargs="*", default=[0.6, 0.75, 0.9, 0.95])
     ap.add_argument("--eval-units", type=int, default=300, help="pages sampled from val/test")
     ap.add_argument("--modern-test-docs", type=int, default=400, help="held-out modern docs scored")
     ap.add_argument("--n-boot", type=int, default=1000)
     ap.add_argument("--val-units", type=int, default=100, help="val pages used for tuning")
-    ap.add_argument("--jobs", type=int, default=3, help="conditions run in parallel (order 8 needs ~3 GB RAM each)")
+    ap.add_argument("--jobs", type=int, default=3, help="conditions run in parallel (~1.5 GB RAM each at order 12)")
     args = ap.parse_args()
     out = outdir("B2")
 
