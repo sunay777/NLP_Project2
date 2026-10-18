@@ -56,7 +56,7 @@ External resources (LID models, bad-word list, modern isiXhosa):
     python experiments/a1_pipeline_survival.py --unit paragraph             # robustness
     python experiments/a1_pipeline_survival.py --unit paragraph --normalised
     python experiments/b1_tokenizer_fertility.py      # B1
-    python experiments/b2_lm_2x2.py --jobs 5          # B2 (~1 h on 5 CPU cores)
+    python experiments/b2_lm_2x2.py --jobs 3          # B2 (~20 min on 3 CPU cores)
     python experiments/c1_summary.py                  # gap decomposition + paper figures
     python experiments/b3_mlm_pll.py                  # B3 (optional, not run)
 

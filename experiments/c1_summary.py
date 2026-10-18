@@ -67,8 +67,15 @@ def attribution(u: pd.DataFrame, extra: dict[str, pd.DataFrame]) -> pd.DataFrame
     return pd.DataFrame(rows).set_index("corpus")
 
 
+MIN_REL_GAP = 0.03  # below this the 1880s-vs-modern gap is too small for a meaningful share
+
+
 def share(raw: float, norm: float, mod: float) -> float:
-    return (raw - norm) / (raw - mod) if raw != mod else np.nan
+    """Orthographic share of the gap; undefined (NaN) when raw and modern differ by
+    less than MIN_REL_GAP of the modern value (a ratio of two near-zero numbers)."""
+    if mod == 0 or abs(raw - mod) / abs(mod) < MIN_REL_GAP:
+        return np.nan
+    return (raw - norm) / (raw - mod)
 
 
 def unit_gap(u: pd.DataFrame, col: str, fn, n_boot: int = 500, seed: int = 0) -> dict:
@@ -157,28 +164,41 @@ def main():
               "hist_xh": "1880s isiXhosa, raw", "hist_xh_norm": "1880s isiXhosa, normalised"}
     colors = {"hist_en": PAPER_COLORS["EN"], "modern_xh": PAPER_COLORS["modern"],
               "hist_xh": PAPER_COLORS["IMVO"], "hist_xh_norm": PAPER_COLORS["ISIG"]}
-    gates = [g for g in GATES if f"removed_by_{g}" in att]
-    cols = [f"removed_by_{g}" for g in gates] + ["survives"]
-    names = ["language ID", "Gopher", "bad words", "perplexity"][:len(gates)] + ["survives\nall gates"]
-    fig, ax = p.subplots(figsize=(4.6, 2.3))
+    # Each bar group is (decision column, use the isiXhosa-stop-word run?). English text keeps
+    # Gopher's English list in that run, so its bars are the same in both settings.
+    groups = [("removed_by_lid_nllb", False, "language ID"),
+              ("removed_by_gopher", False, "Gopher\nEN stops"),
+              ("removed_by_gopher", True, "Gopher\nxh stops"),
+              ("removed_by_badwords", False, "bad words"),
+              ("removed_by_perplexity", False, "perplexity"),
+              ("survives", False, "survives\nEN stops"),
+              ("survives", True, "survives\nxh stops")]
+    groups = [g for g in groups if g[0] in att]
+
+    def val(c, col, xh):
+        key = f"{c} (xh stop words)"
+        return att.loc[key if xh and key in att.index else c, col]
+
+    fig, ax = p.subplots(figsize=(5.4, 2.4))
     w = 0.8 / len(show)
     for i, c in enumerate(show):
-        vals = [att.loc[c, k] for k in cols]
-        x = np.arange(len(cols)) + i * w
+        vals = [val(c, col, xh) for col, xh, _ in groups]
+        x = np.arange(len(groups)) + i * w
         ax.bar(x, vals, w, color=colors[c], label=labels[c])
-        ax.text(x[-1], vals[-1] + 0.02, f"{100 * vals[-1]:.1f}", ha="center", fontsize=5.5, rotation=90)
-    ax.axvline(len(cols) - 1.5 + w * (len(show) - 1) / 2 + 0.4, color="k", lw=0.6, ls=":")
-    ax.set_xticks(np.arange(len(cols)) + w * (len(show) - 1) / 2, names, fontsize=7)
-    ax.set_ylabel("share of 150-word units")
+        for j in (len(groups) - 2, len(groups) - 1):
+            ax.text(x[j], vals[j] + 0.02, f"{100 * vals[j]:.1f}", ha="center", fontsize=5.5, rotation=90)
+    ax.axvline(len(groups) - 2.5 + w * (len(show) - 1) / 2 + 0.4, color="k", lw=0.6, ls=":")
+    ax.set_xticks(np.arange(len(groups)) + w * (len(show) - 1) / 2, [g[2] for g in groups], fontsize=6)
+    ax.set_ylabel("share of 150-word units\nremoved / surviving", fontsize=7)
     ax.set_ylim(0, 1.18)
     ax.legend(frameon=False, fontsize=6, ncol=2, loc="upper left")
     fig.savefig(config.FIG_DIR / "fig1_cascade.png")
 
     # ---- Figure 2: gap decomposition ---------------------------------------
-    keep = ["LID nllb: 1 - P(xho)", "CCNet perplexity (median bits/char)", "tokens/letter (XLM-R/AfroXLMR)",
-            "modern char-LM bits/raw letter"]
+    # Tokenisers are left out: their 1880s-vs-modern gap is under MIN_REL_GAP, so a share is meaningless.
+    keep = ["LID nllb: 1 - P(xho)", "CCNet perplexity (median bits/char)", "modern char-LM bits/raw letter"]
     nice = {keep[0]: "language ID\n(1 - P(isiXhosa), NLLB)", keep[1]: "CCNet perplexity\n(bits/char)",
-            keep[2]: "tokeniser\n(tokens/letter, XLM-R)", keep[3]: "modern char LM\n(bits/raw letter)"}
+            keep[2]: "modern char LM\n(bits/raw letter)"}
     gp = gap.set_index("metric").reindex([k for k in keep if k in set(gap.metric)])
     fig, ax = p.subplots(figsize=(4.2, 1.9))
     y = np.arange(len(gp))
