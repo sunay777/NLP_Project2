@@ -95,7 +95,17 @@ The archive is erased twice over. First by rules that encode English as quality:
 TODO: credit the isiXhosa speaker who checked the normalisation gold set.
 
 \section{Contribution Statements (Not in Page Limit)}
-TODO: final contribution statement -- all authors must agree on this text (see paper/contribution\_statement/ for the preliminary version).
+% DRAFT (21 Oct). All three authors must read and agree to this text before submission.
+% Lines marked [CONFIRM] must be checked by the group: they say who actually did what.
+\textbf{Division of work.} Each author contributed one third (33.3\%) of the project, following the preliminary contribution statement of 14 October 2026. [CONFIRM: keep equal shares?]
+\begin{itemize}
+  \setlength\itemsep{0pt}
+  \item \textbf{Sunay Master}: Experiment A (filter cascade, ablations, qualitative audit of removed text); Introduction, data-curation background and A sections; NeurIPS checklist. \emph{Status: done.} [CONFIRM]
+  \item \textbf{Matthew Purkiss}: modern isiXhosa corpora and B0 normaliser; B1 tokenisers; gold-set forms and the volunteer spelling check; disjoint data roles and reruns; reference checking; Faculty AI ethics statement. \emph{Status: done; gold-set scores pending volunteers.} [CONFIRM]
+  \item \textbf{Harshil Vallabh}: EDA and edition-grouped splits; B2 language-model experiment; gap decomposition; limitations and Discussion; README.txt and requirements.txt. \emph{Status: done.} [CONFIRM]
+  \item \textbf{All}: extended abstract, code and reference checks.
+\end{itemize}
+\textbf{Changes to the plan.} (i) All corpora are compared on 150-word windows instead of paragraphs, because paragraphs against whole modern articles confounded Gopher's 50-word rule; paragraphs are kept as a robustness check. (ii) Modern isiXhosa is split into disjoint roles (perplexity reference, normaliser lexicon, held-out control), because a first run scored the control in-sample and built the lexicon from the perplexity reference. (iii) B1 reports tokens per letter instead of fertility, because 1880s word division distorts per-word counts. (iv) B2 adds a modern-only condition, a held-out modern test set, a raw-character budget, a wider grid (orders 3--12) and a paired test of H4. (v) The gold set is checked by volunteer isiXhosa speakers in eight sets of 25 words. \textbf{Dropped:} B3 (AfroXLMR pseudo-log-likelihood, a stretch goal). [CONFIRM: language-split audit done or dropped?]
 
 \section{AI Ethics Statement (Not in Page Limit)}
 % DRAFT: check against the Wits Faculty of Science AI form on Moodle and edit so it says
