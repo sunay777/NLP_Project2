@@ -8,9 +8,10 @@ and records every decision. Missing resources are skipped with a warning so
 the script runs end-to-end from day one.
 
 Units: by default fixed 150-word windows for every corpus (--unit window), so
-length-dependent rules cannot drive the comparison. Modern sources are split:
-Wikipedia trains the CCNet-style reference LM (as in CCNet); news + government
-text is the control, so the control is never scored in-sample.
+length-dependent rules cannot drive the comparison. Modern data is split into
+disjoint roles (src/modern.py): Wikipedia trains the CCNet-style reference LM (as
+in CCNet); the held-out 'control' half of news + government text is the control,
+so the control is never scored in-sample and never seen by the normaliser.
 
 Outputs (results/A1[_norm][_xhstop][_<unit>][_t<thr>]/):
   units.csv.gz                one row per unit with all decisions
@@ -42,13 +43,6 @@ from src.filters import badwords, gopher, lid, pipeline
 from src.filters.perplexity import PerplexityFilter
 
 
-# CCNet scores documents against a Wikipedia LM, so Wikipedia is the reference;
-# news + government text is the modern control. Keeping them disjoint avoids
-# scoring the control in-sample.
-CONTROL_SOURCES = ["masakhanews_xho", "vukuzenzele_xho"]
-PPL_REF_SOURCES = ["wiki_xh"]
-
-
 def build_units(args) -> pd.DataFrame:
     if args.normalised:
         with open(config.CACHE_DIR / "pages_normalised.pkl", "rb") as f:
@@ -61,7 +55,7 @@ def build_units(args) -> pd.DataFrame:
     en = corpus.to_units(pages, "en", **kw).assign(corpus="hist_en", target="eng")
     parts = [xh, en]
     mod = []
-    for i, (src, d) in enumerate(modern.iter_docs(sources=args.control, min_words=args.min_words)):
+    for i, (src, d) in enumerate(modern.iter_role("control", min_words=args.min_words)):
         chunks = corpus.windows(d, args.window) if args.unit == "window" else [d]
         # every chunk of one modern document shares an `edition` (bootstrap cluster)
         mod += [(src, c, f"modern_{i}") for c in chunks if len(c.split()) >= args.min_words]
@@ -88,14 +82,8 @@ def main():
     ap.add_argument("--normalised", action="store_true")
     ap.add_argument("--xh-stopwords", action="store_true",
                     help="ablation: Gopher stop-word rule with isiXhosa stop words")
-    ap.add_argument("--control", nargs="*", default=CONTROL_SOURCES,
-                    help="modern sources used as the control corpus")
-    ap.add_argument("--ppl-ref", nargs="*", default=PPL_REF_SOURCES,
-                    help="modern sources used to train the CCNet-style reference LM (kept disjoint from --control)")
     ap.add_argument("--n-boot", type=int, default=1000)
     args = ap.parse_args()
-    if set(args.control) & set(args.ppl_ref):
-        raise SystemExit("--control and --ppl-ref must be disjoint (otherwise the control is scored in-sample)")
     name = "A1" + "_norm" * args.normalised + "_xhstop" * args.xh_stopwords
     if args.unit != "window":
         name += f"_{args.unit}"
@@ -124,7 +112,7 @@ def main():
         return [c for d in docs for c in corpus.windows(d, args.window) if len(c.split()) >= args.min_words]
 
     ppl = {}
-    ref_xh = as_units(d for _, d in modern.iter_docs(sources=args.ppl_ref))
+    ref_xh = as_units(d for _, d in modern.iter_role("ppl_ref"))
     if ref_xh:
         ppl["xho"] = PerplexityFilter(ref_xh)
     if config.REF_EN.exists():
@@ -135,18 +123,20 @@ def main():
     else:
         warnings.warn(f"{config.REF_EN} missing - no perplexity gate for hist_en (scripts/prepare_reference_en.py)")
 
-    stop = gopher.EN_STOPWORDS
+    # Each language gets its own stop words: the ablation swaps the English list for
+    # isiXhosa on isiXhosa text only (English text keeps Gopher's English list).
+    stop = {"eng": gopher.EN_STOPWORDS, "xho": gopher.EN_STOPWORDS}
     if args.xh_stopwords:
-        lex = modern.lexicon()
-        stop = frozenset(w for w, _ in lex.most_common(8))
-        print("isiXhosa stop words:", sorted(stop))
+        lex = modern.lexicon(role="lexicon")  # never the control or the perplexity reference
+        stop["xho"] = frozenset(w for w, _ in lex.most_common(8))
+        print("isiXhosa stop words:", sorted(stop["xho"]))
 
     # Each corpus is judged against its own target language.
     results = []
     for tgt, g in units.groupby("target"):
         results.append(pipeline.run(g, target_lang=tgt, lid_models=lid_models, lid_threshold=args.threshold,
                                     badword_filter=bw, ppl_filter=ppl.get(tgt),
-                                    gopher_stopwords=stop))
+                                    gopher_stopwords=stop[tgt]))
     res = pd.concat(results, ignore_index=True)
     res.drop(columns=["text"]).to_csv(out / "units.csv.gz", index=False)
 

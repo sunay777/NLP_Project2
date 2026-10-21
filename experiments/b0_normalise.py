@@ -32,7 +32,11 @@ def main():
     args = ap.parse_args()
     out = outdir("B0")
 
-    lex = modern.lexicon()
+    # Lexicon = the 'lexicon' half of news + government text only. Wikipedia (the
+    # perplexity reference) and the 'control' half (the evaluation corpus) are never
+    # used, so later gains cannot come from normalising towards the evaluation text.
+    lex = modern.lexicon(role="lexicon")
+    heldout = modern.lexicon(role="control")
     if not lex:
         raise SystemExit("No modern text in resources/modern/ - run scripts/prepare_modern.py first.")
     df = corpus.load_pages()
@@ -50,13 +54,19 @@ def main():
         "map_size": len(mapping),
         "coverage_raw": orthography.coverage(hist, lex),
         "coverage_norm": orthography.coverage(norm, lex),
+        # coverage against held-out modern text the normaliser never saw
+        "heldout_types": len(heldout),
+        "coverage_heldout_raw": orthography.coverage(hist, heldout),
+        "coverage_heldout_norm": orthography.coverage(norm, heldout),
         "tokens_changed_frac": sum(hist[w] for w in mapping) / sum(hist.values()),
         "by_paper": {},
     }
     for p, g in df.groupby("paper"):
         h = Counter(w for t in g.xh for w in words(t))
         n = Counter(w for t in g.xh_norm for w in words(t))
-        cov["by_paper"][p] = {"raw": orthography.coverage(h, lex), "norm": orthography.coverage(n, lex)}
+        cov["by_paper"][p] = {"raw": orthography.coverage(h, lex), "norm": orthography.coverage(n, lex),
+                              "heldout_raw": orthography.coverage(h, heldout),
+                              "heldout_norm": orthography.coverage(n, heldout)}
     save_json(cov, out / "coverage.json")
     print({k: v for k, v in cov.items() if k != "by_paper"}, cov["by_paper"])
 

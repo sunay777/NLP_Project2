@@ -15,6 +15,8 @@ Reported (results/B0/gold_eval.json):
   accuracy   system output == gold, over all checked types
   precision  of the rewrites the system made, share that are correct
   recall     of the types that need a change, share the system fixed correctly
+  (each with a 95% Wilson interval; also reported without words marked "not sure")
+Returned volunteer forms are merged in first with scripts/collect_gold_forms.py.
 
 Run:  python experiments/b0_gold.py --make
       python experiments/b0_gold.py
@@ -61,20 +63,44 @@ def evaluate(mapping: dict) -> dict:
     if g.empty:
         print(f"no checked rows in {GOLD}; fill `checked_by` after verifying entries")
         return {}
+    res = score(g, mapping)
+    # Robustness: the same scores without the words the checker marked as uncertain.
+    sure = g[~g.get("note", pd.Series("", index=g.index)).fillna("").str.lower().str.contains("not sure|unsure|\\?")]
+    if 0 < len(sure) < len(g):
+        res["excluding_unsure"] = {k: v for k, v in score(sure, mapping).items() if k != "errors"}
+    res["checkers"] = g.checked_by.value_counts().to_dict()
+    return res
+
+
+def wilson(k: int, n: int, z: float = 1.96) -> list[float] | None:
+    """95% Wilson score interval for a proportion k/n (sound for small n)."""
+    if n == 0:
+        return None
+    p = k / n
+    den = 1 + z * z / n
+    mid = (p + z * z / (2 * n)) / den
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / den
+    return [round(mid - half, 4), round(mid + half, 4)]
+
+
+def score(g: pd.DataFrame, mapping: dict) -> dict:
     hist, gold = g.historical.str.lower(), g.modern.str.lower()
     system = hist.map(lambda w: mapping.get(w, w))
-    changed, needs = system != hist, gold != hist
-    res = {
+    changed, needs, right = system != hist, gold != hist, system == gold
+    return {
         "n_checked": int(len(g)),
-        "accuracy": float((system == gold).mean()),
-        "precision": float((system == gold)[changed].mean()) if changed.any() else None,
-        "recall": float((system == gold)[needs].mean()) if needs.any() else None,
+        "accuracy": float(right.mean()), "accuracy_ci": wilson(int(right.sum()), len(g)),
+        "precision": float(right[changed].mean()) if changed.any() else None,
+        "precision_ci": wilson(int(right[changed].sum()), int(changed.sum())),
+        "recall": float(right[needs].mean()) if needs.any() else None,
+        "recall_ci": wilson(int(right[needs].sum()), int(needs.sum())),
+        # over-normalisation: words that should stay the same but the system changed
+        "over_normalised": int((changed & ~needs).sum()),
         "n_system_changed": int(changed.sum()),
         "n_gold_needs_change": int(needs.sum()),
         "errors": [{"historical": h, "gold": o, "system": s}
                    for h, o, s in zip(hist, gold, system) if s != o],
     }
-    return res
 
 
 def main():
