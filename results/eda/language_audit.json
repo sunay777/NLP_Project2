@@ -1,0 +1,40 @@
+{
+ "n_checked": 50,
+ "isiXhosa": {
+  "n": 25,
+  "n_wrong": 0,
+  "error_rate": 0.0,
+  "ci": [
+   0.0,
+   0.1332
+  ],
+  "wrong_as": {
+   "isixhosa": 0,
+   "english": 0,
+   "mixed": 0,
+   "unreadable": 0
+  }
+ },
+ "English": {
+  "n": 25,
+  "n_wrong": 1,
+  "error_rate": 0.04,
+  "ci": [
+   0.0071,
+   0.1954
+  ],
+  "wrong_as": {
+   "isixhosa": 0,
+   "english": 0,
+   "mixed": 1,
+   "unreadable": 0
+  }
+ },
+ "overall": {
+  "error_rate": 0.02,
+  "ci": [
+   0.0035,
+   0.105
+  ]
+ }
+}

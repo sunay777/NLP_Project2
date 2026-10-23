@@ -38,6 +38,6 @@
 2. **Compile on Overleaf and re-check 2 pages.** A local tectonic build fits the main text on exactly 2 pages after the title page; Overleaf's pdflatex may differ slightly. Check whether the two `\phantom{.}\newpage` lines (title page) are in the Moodle template.
 3. ~~Verify every reference~~ Done 18 Oct: all 15 checked against publisher records; missing pages/DOIs added.
 4. Paste the official NeurIPS checklist `.tex` and the Faculty AI form from Moodle, using `paper/ethics_drafts.md`. Check the dataset licences marked *verify*.
-5. Hand-audit ~50 blocks of the archive's language split (PLAN §5) and report the error rate, or keep it as a limitation (currently listed).
+5. ~~Hand-audit ~50 blocks of the language split~~ Done 21 Oct (Matthew, Sunay): 1/50 mislabelled, 2% [0.4, 10.5] (`results/eda/language_audit.json`).
 6. Final contribution statement (list the design changes above).
 7. Optional: B3 (AfroXLMR pseudo-log-likelihood), not run.
