@@ -34,7 +34,7 @@
 5. Bug fixed: prefix-joining used to merge words across paragraph breaks.
 
 ## Still needs a human (in priority order)
-1. **Gold set: with an isiXhosa speaker** (form: `isiXhosa_spelling_check.docx`, sent 18 Oct). When it returns, fill `modern` + `checked_by`, append to `data/gold_normalisation.tsv`, run `python experiments/b0_gold.py`, and put precision/recall in the paper (replaces "is being checked"); credit the speaker in the acknowledgements.
+1. ~~Gold set~~ Done 25 Oct: 7/8 sets returned by 6 volunteers (169 answered, 165 scored). Precision 88% [76, 94], recall 35% [27, 44]; aspiration-only recall 48% [38, 59], every miss a word too rare in the lexicon half (`results/B0/gold_eval.json`). Set 1 never returned.
 2. **Compile on Overleaf and re-check 2 pages.** A local tectonic build fits the main text on exactly 2 pages after the title page; Overleaf's pdflatex may differ slightly. Check whether the two `\phantom{.}\newpage` lines (title page) are in the Moodle template.
 3. ~~Verify every reference~~ Done 18 Oct: all 15 checked against publisher records; missing pages/DOIs added.
 4. Paste the official NeurIPS checklist `.tex` and the Faculty AI form from Moodle, using `paper/ethics_drafts.md`. Check the dataset licences marked *verify*.

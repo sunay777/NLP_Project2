@@ -31,12 +31,13 @@ import numpy as np
 import pandas as pd
 from _common import config, outdir, save_json
 
-from src import corpus
+from src import corpus, modern, orthography
 from src.text import words
 
 GOLD = config.ROOT / "data" / "gold_normalisation.tsv"
 CANDIDATES = config.ROOT / "data" / "gold_candidates.tsv"
 UNCHECKED = {"", "todo", "unverified", "nan"}
+MIN_COUNT = 3  # b0_normalise.py default
 BANDS = [(1000, None), (100, 1000), (10, 100), (3, 10)]
 
 
@@ -63,13 +64,44 @@ def evaluate(mapping: dict) -> dict:
     if g.empty:
         print(f"no checked rows in {GOLD}; fill `checked_by` after verifying entries")
         return {}
+    note = g.get("note", pd.Series("", index=g.index)).fillna("").str.lower()
+    # Words the checker marked as English or an OCR error are not isiXhosa: left out.
+    not_xh = note.str.contains("english|ocr")
+    g, note = g[~not_xh], note[~not_xh]
     res = score(g, mapping)
+    res["excluded_not_isixhosa"] = int(not_xh.sum())
     # Robustness: the same scores without the words the checker marked as uncertain.
-    sure = g[~g.get("note", pd.Series("", index=g.index)).fillna("").str.lower().str.contains("not sure|unsure|\\?")]
+    sure = g[~note.str.contains("not sure|unsure|\\?|possibl|context")]
     if 0 < len(sure) < len(g):
         res["excluding_unsure"] = {k: v for k, v in score(sure, mapping).items() if k != "errors"}
     res["checkers"] = g.checked_by.value_counts().to_dict()
+    res["in_scope"] = in_scope(g, mapping)
     return res
+
+
+def in_scope(g: pd.DataFrame, mapping: dict) -> dict:
+    """Recall on the words whose modern form only adds aspiration h's (what the normaliser
+    can do), and why it missed the rest: is the target in the lexicon often enough?"""
+    lex = modern.lexicon(role="lexicon")
+    hit = miss_absent = miss_rare = miss_other = n = 0
+    for h, m in zip(g.historical.str.lower(), g.modern.str.lower()):
+        alts = m.split("|")
+        cands = set(orthography.candidates(h))
+        target = next((a for a in alts if a != h and a in cands), None)
+        if h in alts or target is None:
+            continue
+        n += 1
+        if mapping.get(h, h) in alts:
+            hit += 1
+        elif lex.get(target, 0) == 0:
+            miss_absent += 1
+        elif lex.get(target, 0) < MIN_COUNT:
+            miss_rare += 1
+        else:
+            miss_other += 1
+    return {"n": n, "recall": hit / n if n else None, "recall_ci": wilson(hit, n),
+            "missed_target_not_in_lexicon": miss_absent,
+            f"missed_target_below_min_count_{MIN_COUNT}": miss_rare, "missed_other": miss_other}
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> list[float] | None:
@@ -84,9 +116,13 @@ def wilson(k: int, n: int, z: float = 1.96) -> list[float] | None:
 
 
 def score(g: pd.DataFrame, mapping: dict) -> dict:
-    hist, gold = g.historical.str.lower(), g.modern.str.lower()
+    hist = g.historical.str.lower()
+    alts = g.modern.str.lower().str.split("|")  # a checker may give alternatives ("a / b")
     system = hist.map(lambda w: mapping.get(w, w))
-    changed, needs, right = system != hist, gold != hist, system == gold
+    changed = system != hist
+    needs = pd.Series([h not in a for h, a in zip(hist, alts)], index=g.index)
+    right = pd.Series([s in a for s, a in zip(system, alts)], index=g.index)
+    gold = alts.str.join("|")
     return {
         "n_checked": int(len(g)),
         "accuracy": float(right.mean()), "accuracy_ci": wilson(int(right.sum()), len(g)),

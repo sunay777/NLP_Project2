@@ -1,7 +1,175 @@
-historical	modern	checked_by	note
-kuti	kuthi	TODO	seed example; verify with an isiXhosa speaker
-ukuti	ukuthi	TODO	seed
-pakati	phakathi	TODO	seed
-umteto	umthetho	TODO	seed
-tixo	thixo	TODO	seed
-rulumente	rhulumente	TODO	seed
+historical	modern	checked_by	note	set
+kuti	kuthi	TODO	seed example; verify with an isiXhosa speaker	
+ukuti	ukuthi	TODO	seed	
+umteto	umthetho	TODO	seed	
+tixo	thixo	TODO	seed	
+rulumente	rhulumente	TODO	seed	
+ike	ikhe	LM	Not sure	2.0
+ube	ibe	LM		2.0
+kokukanya	ngokukanya	LM		2.0
+ngokuncedana	ngokuncedana	LM		2.0
+abanteto	abantetho	LM		2.0
+obute	obuthe	LM		2.0
+maroma	marhoma	LM		2.0
+nabarwebi	nabarhwebi	LM		2.0
+zokobe	zakube	LM		2.0
+bafikelela	bafikela	LM		2.0
+herbs	imifuno	LM	English	2.0
+esimsulwa	emsulwa	LM		2.0
+ezimbalini	embalini	LM		2.0
+isikalo	isikhalo	LM		2.0
+ntsundu	ntsundu	LM	Name	2.0
+yeza	iyeza	LM		2.0
+nangaponoshono	nangaphesheya	LM		2.0
+pambi	phambi	LM		2.0
+bukuqu	bukuqa	LM		2.0
+ngamanani	ngenani	LM		2.0
+sitili	sithili	LM		2.0
+kwenyanga	kwenyanga	LM		2.0
+kupindwe	kuphindwe	LM		2.0
+ezilikulu	ezilikhulu	LM		2.0
+bukulu	bukhulu	LM		2.0
+zakuyibona	sakuyibona	NM	Not sure	5.0
+zabantsundu	sabantsundu	NM	Not sure	5.0
+ifumene	ifumane	NM		5.0
+sapinda	saphinda	NM		5.0
+rini	rhini	NM		5.0
+kwamapepa	kwamaphepha	NM		5.0
+amaqula	iqula	NM		5.0
+mawetu	mawethu	NM	Name	5.0
+bekuko	bekukho	NM		5.0
+bamane	bemana	NM		5.0
+izikalazo	izikhalazo	NM		5.0
+enqweleni	enqwelweni	NM		5.0
+amafuta	amafutha	NM		5.0
+sengxoxweni	sengxoxweni	NM	Not sure	5.0
+tuta	thutha	NM		5.0
+kute	kude	NM		5.0
+ngohlobo	ngohlobo	NM		5.0
+siyakolwa	siyakholwa	NM		5.0
+ngapandle	ngaphandle	NM		5.0
+temba	themba	NM	Name	5.0
+ukutabata	ukuthabatha	NM		5.0
+bayakutazwa	bayakhutazwa	NM		5.0
+ikubusi	ikubusi	NM	Not sure	5.0
+kungcola	kuyangcola	NM	kungcola	5.0
+ukuzakela	ukuzakhela	NM		5.0
+ukutobeka	ukuthobela	LM		6.0
+ezingela	ezingela	LM	Unchanged	6.0
+adams	adams	LM	Name	6.0
+ezingapumiyo	ezingaphumiyo	LM		6.0
+wacana	wacana	LM		6.0
+ote	othe	LM		6.0
+saka	sakha	LM		6.0
+ibhuloro	ibhulorho	LM		6.0
+ngemiteto	ngemithetho	LM		6.0
+pelem	phelem	LM		6.0
+ukubonisa	ukubonisa	LM		6.0
+sipile	siphile	LM		6.0
+iqina	iqhina	LM		6.0
+neyase	neyase	LM	Unchanged	6.0
+eqele	eqhele	LM		6.0
+moyeni	mhoyeni	LM		6.0
+exaxaza	exaxaza	LM	Unchanged	6.0
+rarabe	rharhabe	LM		6.0
+bepila	bephila	LM		6.0
+notale	nothale	LM		6.0
+ute	uthe	LM		6.0
+fowler	fowler	LM	Unchanged	6.0
+bemanyene	bemanyene	LM		6.0
+anayo	unayo	LM		6.0
+king	ukumkani	LM	English	6.0
+yokutata	yokuthatha	AM	Not sure	7.0
+enini	enini	AM		7.0
+kuqala	kuqala	AM		7.0
+lowo	lowo	AM		7.0
+sixela	sixhela	AM		7.0
+ndiye	ndiye	AM		7.0
+unetamsanqa	unethamsanqa	AM		7.0
+nkosazana	nkosazana	AM	Name	7.0
+encamini	encamini	AM		7.0
+elinye	elinye	AM	Unchanged	7.0
+uyisingise	uyisingise	AM		7.0
+eziti	ezithi	AM		7.0
+kwaba	kwaba	AM		7.0
+ubizwe	ubiziwe	AM		7.0
+ake	akhe	AM		7.0
+ukutengiswa	ukuthengisa	AM		7.0
+yalamatye	yalamatye	AM		7.0
+unokudliwa	unokudliwa	AM		7.0
+kokwesitatu	kokwesithathu	AM		7.0
+herodi	herodi	AM		7.0
+yotango	yothango	AM		7.0
+ubuqili	ubuqhili	AM		7.0
+ukozi	ukhozi	AM		7.0
+mare	mare	AM		7.0
+amakwenkwe	amakhwenke	AM		7.0
+zibete	zibethe	Mila		3.0
+bebengeko	bebengekho	Mila		3.0
+nasetywaleni	nasetywaleni	Mila		3.0
+kuqelekile	kuqhelekile	Mila		3.0
+kuhanjiswa	kuhanjiswa	Mila		3.0
+epakamileyo	ephakamileyo	Mila		3.0
+amatandatu	amathandathu|amantandathu	Mila		3.0
+kumisa	ku’misa	Mila		3.0
+nesiqiti	nesiqithi	Mila		3.0
+sam	sam	Mila		3.0
+uyitate	uyithathe	Mila		3.0
+ngolwesi-tatu	ngolwesi-thathu	Mila		3.0
+angati	angathi	Mila		3.0
+limhlope	limphlophe	Mila		3.0
+nokungakatali	nokungakhathali	Mila		3.0
+ezintatu	ezintathu	Mila		3.0
+lasekohlo	lasekhohlo	Mila		3.0
+makulu	makhulu	Mila		3.0
+kukona	kukhona	Mila		3.0
+zokupungela	zokuphangela	Mila		3.0
+apeteyo	aphetheyo	Mila		3.0
+zizele	zizele	Mila		3.0
+nama	nyama	Mila		3.0
+zatsho	zatsho	Mcacisi		4.0
+magqadaza	magqadaza	Mcacisi		4.0
+nonabe	monabe	Mcacisi	Possibly name	4.0
+ukutata	ukuthatha	Mcacisi		4.0
+th	th	Mcacisi	OCR error	4.0
+sati	sathi	Mcacisi		4.0
+abamhlope	abamhlophe	Mcacisi		4.0
+bepete	baphethe	Mcacisi		4.0
+mvulo	mvulo	Mcacisi		4.0
+mikulu	mikhulu	Mcacisi	Possible name	4.0
+m’belle	m’belle	Mcacisi	Possible error name	4.0
+basesicengeni	besesicengeni	Mcacisi		4.0
+sans	sans	Mcacisi	Possible English error	4.0
+lendawo	le ndawo	Mcacisi		4.0
+wake	wakhe	Mcacisi		4.0
+uyakutanda	uyakuthanda	Mcacisi		4.0
+ezinayo	ezinayo	Mcacisi		4.0
+yilento	yile nto	Mcacisi		4.0
+zizatu	zizathu	Mcacisi		4.0
+upulukene	uphulukene	Mcacisi		4.0
+ikutaza	ikhuthaza	Mcacisi		4.0
+inteto	intetho	Mcacisi		4.0
+engeko	engekho	Mcacisi		4.0
+bakula	bakhula	Mcacisi		4.0
+kwexa	kwexa	Mcacisi	Context needed	4.0
+iwe	iwe	SN		8.0
+pakati	phakathi	SN		8.0
+kutengwe	kuthengwe	SN		8.0
+esaneliswa	esaneliswa	SN		8.0
+lomteto	lomthetho	SN		8.0
+ingqungqutela	ingqungquthela	SN		8.0
+kwati	kwathi	SN		8.0
+ukulile	ukhulile	SN		8.0
+ukurweba	ukurweba	SN		8.0
+ngekulu	ngekhulu	SN		8.0
+mteto	mthetho	SN		8.0
+nokutengisa	nokuthengisa	SN		8.0
+bake	bakhe	SN		8.0
+besimana	besimana	SN		8.0
+ezinje	ezinje	SN		8.0
+tina	thina	SN		8.0
+elikulu	elikhulu	SN		8.0
+xosa	xhosa	SN		8.0
+yokwapulwa	yokwaphulwa	SN		8.0
+amakosi	amakhosi	SN		8.0
+ngesi	ngesi	SN		8.0
