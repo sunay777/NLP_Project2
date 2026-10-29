@@ -1,4 +1,5 @@
 \documentclass[10pt,letterpaper]{article}
+\usepackage[T1]{fontenc}   % Helvetica (from ccn.sty) under both pdfLaTeX and XeTeX-based builds
 
 \usepackage{ccn}
 \usepackage{pslatex}
@@ -18,6 +19,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[labelfont=bf, margin=0.8cm, font=sf]{caption}
+\usepackage{array}          % ragged-right table columns
+\usepackage{pdfpages}       % appended signed AI declaration
 
 % DRAFT regenerated from results/ on 2026-10-18 (disjoint modern-data roles, B2 orders 3-12). Numbers come from results/C1/headline.json,
 % results/C1/gate_attribution.csv, results/B1/fertility.csv and results/B2/lm_2x2.csv.
@@ -25,9 +28,9 @@
 
 \title{Erased and Penalised: 19th-Century isiXhosa Newspapers in a Modern LLM Data Pipeline}
 
-\author{{\large \bf Sunay Master (2677874)}
-  \AND {\large \bf Matthew Purkiss (2697424)}
-  \AND {\large \bf Harshil Vallabh (2656158)} }
+\author{{\large \bf Sunay Master (2677874)} \\ University of the Witwatersrand, 1 Jan Smuts Ave,\\ Braamfontein, Johannesburg, 2000, South Africa
+  \AND {\large \bf Matthew Purkiss (2697424)} \\ University of the Witwatersrand, 1 Jan Smuts Ave,\\ Braamfontein, Johannesburg, 2000, South Africa
+  \AND {\large \bf Harshil Vallabh (2656158)} \\ University of the Witwatersrand, 1 Jan Smuts Ave,\\ Braamfontein, Johannesburg, 2000, South Africa}
 
 \begin{document}
 
@@ -94,29 +97,85 @@ The archive is erased twice over. First by rules that encode English as quality:
 \section{Acknowledgements (Not in Page Limit)}
 We thank Latita Mnyaka, Mila, Mcacisi, Nolubabalo Mqoyi, Anathi Mxenge and Siseko Nomavila, who volunteered their time to check the modern spelling of the gold-set words.
 
-\section{Contribution Statements (Not in Page Limit)}
-% Agreed by all three authors on 21 Oct 2026.
-\textbf{Division of work.} Each author contributed one third (33.3\%) of the project, following the preliminary contribution statement of 14 October 2026.
-\begin{itemize}
-  \setlength\itemsep{0pt}
-  \item \textbf{Sunay Master}: Experiment A (filter cascade, ablations, qualitative audit of removed text); Introduction, data-curation background and A sections; NeurIPS checklist. \emph{Status: done.}
-  \item \textbf{Matthew Purkiss}: modern isiXhosa corpora and B0 normaliser; B1 tokenisers; gold-set forms and the volunteer spelling check; disjoint data roles and reruns; reference checking; Faculty AI ethics statement. \emph{Status: done; gold-set scores pending volunteers.}
-  \item \textbf{Harshil Vallabh}: EDA and edition-grouped splits; B2 language-model experiment; gap decomposition; limitations and Discussion; README.txt and requirements.txt. \emph{Status: done.}
-  \item \textbf{All}: extended abstract, code and reference checks.
-\end{itemize}
-\textbf{Changes to the plan.} (i) All corpora are compared on 150-word windows instead of paragraphs, because paragraphs against whole modern articles confounded Gopher's 50-word rule; paragraphs are kept as a robustness check. (ii) Modern isiXhosa is split into disjoint roles (perplexity reference, normaliser lexicon, held-out control), because a first run scored the control in-sample and built the lexicon from the perplexity reference. (iii) B1 reports tokens per letter instead of fertility, because 1880s word division distorts per-word counts. (iv) B2 adds a modern-only condition, a held-out modern test set, a raw-character budget, a wider grid (orders 3--12) and a paired test of H4. (v) The gold set was checked by six volunteer isiXhosa speakers; seven of eight 25-word sets were returned (169 words answered). (vi) The language-split audit was done by Matthew Purkiss and Sunay Master on 50 random blocks. \textbf{Dropped:} B3 (AfroXLMR pseudo-log-likelihood, a stretch goal).
+\onecolumn
+\section{Contribution Statements}
+% Agreed by all three authors on 21 Oct 2026 (layout as in Project 1).
+\begingroup\setlength{\parindent}{0pt}\setlength{\parskip}{0.3em}\renewcommand{\itemize}{\begingroup\list{\textbullet}{\setlength{\itemsep}{1pt}\setlength{\parsep}{0pt}\setlength{\topsep}{2pt}}}\renewcommand{\enditemize}{\endlist\endgroup}
 
-\section{AI Ethics Statement (Not in Page Limit)}
-% DRAFT: check against the Wits Faculty of Science AI form on Moodle and edit so it says
-% exactly how each member used AI tools. All three authors must agree on it.
-Generative AI (Anthropic's Claude, used through Claude Code) was used to help write and debug the analysis code (data loading, filter re-implementations, experiment scripts and plotting), to run the experiments, to check references against their publisher records, to prepare the word lists given to isiXhosa speakers, and to draft and edit the text of this extended abstract. The research question, hypotheses and design decisions are the group's own. The authors reviewed and executed all code, every number in the paper comes from those executions (\texttt{results/} in the repository), and the authors take full responsibility for all code and writing submitted.
+\textbf{Group members:} Sunay Master (2677874), Matthew Purkiss (2697424), Harshil Vallabh (2656158)
+
+\textbf{Project:} \emph{Erased and penalised: 19th-century isiXhosa newspapers in modern NLP pipelines}
+
+\textbf{Research question.} When the isiXhosa newspapers \emph{Isigidimi samaXosa} (1870--1888) and \emph{Imvo Zabantsundu} (1884--1894) from the isiXhosa Intellectual Traditions corpus \citep{schoots2023archive} are passed through a modern NLP pipeline, how much of the text is filtered out, and how much worse is it modelled? How much of that penalty comes from fixable spelling differences rather than genuine linguistic or cultural change?
+
+\subsection{Division of work}
+
+Each member contributed one third (33.3\%) of the project, following the preliminary contribution statement of 14 October 2026.
+
+\begin{center}
+\small
+\begin{tabular}{@{}l l >{\raggedright\arraybackslash}p{0.38\textwidth} >{\raggedright\arraybackslash}p{0.32\textwidth}@{}}
+\toprule
+\textbf{Member} & \textbf{Share} & \textbf{Experiments} & \textbf{Writing and admin} \\
+\midrule
+Sunay & 33.3\% & Experiment A: filter cascade, ablations, qualitative audit of removed text & Introduction, data-curation background and A sections; NeurIPS 2024 checklist \\
+\addlinespace
+Matthew & 33.3\% & Modern isiXhosa corpora and B0 normaliser; B1 tokenisers; volunteer spelling check; disjoint data roles and reruns & Reference checking; Faculty of Science AI ethics statement \\
+\addlinespace
+Harshil & 33.3\% & EDA and edition-grouped splits; B2 language-model experiment; gap decomposition & Limitations and Discussion; README.txt and requirements.txt \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Sunay Master} (status: done)
+\begin{itemize}
+    \item Experiment A: the filter cascade (language ID, Gopher rules, C4 bad words, CCNet-style perplexity), its ablations, and the qualitative audit of removed text.
+    \item Write the Introduction, the background on data curation and the A sections; complete the NeurIPS 2024 checklist.
+\end{itemize}
+
+\textbf{Matthew Purkiss} (status: done)
+\begin{itemize}
+    \item Prepare the modern isiXhosa corpora and build the B0 spelling normaliser; run B1 (tokenisers).
+    \item Prepare the gold-set forms and run the volunteer spelling check; split the modern data into disjoint roles and rerun the experiments.
+    \item Check every reference; write the Faculty of Science AI ethics statement.
+\end{itemize}
+
+\textbf{Harshil Vallabh} (status: done)
+\begin{itemize}
+    \item EDA and edition-grouped train/validation/test splits; the B2 language-model experiment; the gap decomposition.
+    \item Write the limitations and Discussion, README.txt and requirements.txt.
+\end{itemize}
+
+\textbf{Shared by all members}
+\begin{itemize}
+    \item The two-page extended abstract (PDF), the full code, and checking every reference.
+\end{itemize}
+
+\subsection{Changes to the plan}
+(i) All corpora are compared on 150-word windows instead of paragraphs, because paragraphs against whole modern articles confounded Gopher's 50-word rule; paragraphs are kept as a robustness check. (ii) Modern isiXhosa is split into disjoint roles (perplexity reference, normaliser lexicon, held-out control), because a first run scored the control in-sample and built the lexicon from the perplexity reference. (iii) B1 reports tokens per letter instead of fertility, because 1880s word division distorts per-word counts. (iv) B2 adds a modern-only condition, a held-out modern test set, a raw-character budget, a wider grid (orders 3--12) and a paired test of H4. (v) The gold set was checked by six volunteer isiXhosa speakers; seven of eight 25-word sets were returned (169 words answered). (vi) The language-split audit was done by Matthew Purkiss and Sunay Master on 50 random blocks. \textbf{Dropped:} B3 (AfroXLMR pseudo-log-likelihood, a stretch goal).
+
+\subsection{Agreement}
+
+All group members have read and agree to this division of work.
+
+\vspace{0.5em}
+\begin{tabular}{@{}p{0.31\textwidth}p{0.31\textwidth}p{0.31\textwidth}@{}}
+Sunay Master & Matthew Purkiss & Harshil Vallabh \\
+\end{tabular}
+\endgroup
+
+\twocolumn
 
 \bibliographystyle{apacite}
 \setlength{\bibleftmargin}{.125in}
 \setlength{\bibindent}{-\bibleftmargin}
 \bibliography{references}
 
-% NeurIPS checklist: after the references, before any supplementary material (project brief).
+% After the references: the NeurIPS 2024 checklist (.tex from Moodle), then the AI declaration.
+\onecolumn
 \input{checklist}
+% Faculty of Science AI declaration: the signed scan if present, otherwise the unsigned form.
+\clearpage
+\IfFileExists{ai_declaration_signed.pdf}{\includepdf[pages=-]{ai_declaration_signed.pdf}}{\input{ai_declaration}}
 
 \end{document}
