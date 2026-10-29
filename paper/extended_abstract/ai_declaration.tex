@@ -1,12 +1,16 @@
 % Wits Faculty of Science AI declaration (same form and ticks as Project 1).
-% Print, sign and scan this page, save the scan as ai_declaration_signed.pdf in this
-% folder, and main.tex will include the signed version instead of this one.
+% Signatures are read from signatures/ (git-ignored, with each member's consent);
+% a scanned ai_declaration_signed.pdf in this folder replaces the whole page.
 \thispagestyle{empty}
 \begingroup
 \rmfamily\normalsize
 \setlength{\parindent}{0pt}\setlength{\parskip}{0.7em}
 \newcommand{\yes}{\makebox[1.2em][l]{$\boxtimes$}}
 \newcommand{\no}{\makebox[1.2em][l]{$\square$}}
+% Signatures (signatures/sig_<name>.pdf, kept out of git) sit on the line; blank line if absent.
+\newcommand{\sig}[1]{\IfFileExists{signatures/sig_#1.pdf}%
+  {\makebox[0pt][l]{\hspace{0.5em}\raisebox{-0.15em}{\includegraphics[height=1.9em]{signatures/sig_#1.pdf}}}\hrulefill}{\hrulefill}}
+\newcommand{\sigdate}{\IfFileExists{signatures/sig_sunay.pdf}{29/10/2026}{\hrulefill}}
 \begin{center}
 {\Large\bfseries Wits University Faculty of Science}\\[0.4em]
 {\Large\bfseries Postgraduate Student AI Declaration}
@@ -50,8 +54,8 @@ If generative AI tools were used as an integral part of the experimental design 
 \renewcommand{\arraystretch}{2.6}
 \begin{tabular}{@{}p{0.2\textwidth}p{0.15\textwidth}p{0.36\textwidth}p{0.17\textwidth}@{}}
 \textbf{Name} & \textbf{Student number} & \textbf{Candidate signature} & \textbf{Date} \\
-Sunay Master & 2677874 & \hrulefill & \hrulefill \\
-Matthew Purkiss & 2697424 & \hrulefill & \hrulefill \\
-Harshil Vallabh & 2656158 & \hrulefill & \hrulefill \\
+Sunay Master & 2677874 & \sig{sunay} & \sigdate \\
+Matthew Purkiss & 2697424 & \sig{matthew} & \sigdate \\
+Harshil Vallabh & 2656158 & \sig{harshil} & \sigdate \\
 \end{tabular}
 \endgroup

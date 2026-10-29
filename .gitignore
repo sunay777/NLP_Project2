@@ -21,3 +21,7 @@ results/**/*.json
 
 # run logs
 logs/
+
+# signatures for the AI declaration: kept local, never published
+paper/extended_abstract/signatures/
+paper/extended_abstract/ai_declaration_signed.pdf
