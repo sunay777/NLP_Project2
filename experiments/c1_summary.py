@@ -191,7 +191,7 @@ def main():
     ax.set_xticks(np.arange(len(groups)) + w * (len(show) - 1) / 2, [g[2] for g in groups], fontsize=6)
     ax.set_ylabel("share of 150-word units\nremoved / surviving", fontsize=7)
     ax.set_ylim(0, 1.18)
-    ax.legend(frameon=False, fontsize=6, ncol=2, loc="upper left")
+    ax.legend(frameon=False, fontsize=6, ncol=2, loc="lower left", bbox_to_anchor=(0, 1.0))
     fig.savefig(config.FIG_DIR / "fig1_cascade.png")
 
     # ---- Figure 2: gap decomposition ---------------------------------------
